@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PostGISGDO" />
+		<Option makefile="makefile" />
+		<Option pch_mode="0" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="C:/Documents and Settings/pavel/My Documents/UserData/INGR/PostGIS/PostGISGDO.exe" prefix_auto="0" extension_auto="0" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectResourceIncludeDirsRelation="0" />
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="default;" />
+		</VirtualTargets>
+		<Unit filename="Common/CComTypes.cpp" />
+		<Unit filename="Common/CComTypes.hpp" />
+		<Unit filename="Common/EWKBtoGDO.cpp" />
+		<Unit filename="Common/EWKBtoGDO.hpp" />
+		<Unit filename="Common/Errors.hpp" />
+		<Unit filename="Common/GDOUtils.cpp" />
+		<Unit filename="Common/GDOUtils.hpp" />
+		<Unit filename="Common/GDOtoEWKB.cpp" />
+		<Unit filename="Common/GDOtoEWKB.hpp" />
+		<Unit filename="Common/LogFiles.cpp" />
+		<Unit filename="Common/LogFiles.hpp" />
+		<Unit filename="Common/PAFM_TLB.hpp" />
+		<Unit filename="Common/PCSS_TLB.cpp" />
+		<Unit filename="Common/PCSS_TLB.hpp" />
+		<Unit filename="Common/PGSCoordSystems.cpp" />
+		<Unit filename="Common/PGSCoordSystems.hpp" />
+		<Unit filename="Common/PGSTypes.cpp" />
+		<Unit filename="Common/PGSTypes.hpp" />
+		<Unit filename="Common/PGtoGDOmaps.cpp" />
+		<Unit filename="Common/PGtoGDOmaps.hpp" />
+		<Unit filename="Common/PsgDBUInterfaces.hpp" />
+		<Unit filename="Common/Registrar.hpp" />
+		<Unit filename="Common/VarUtils.cpp" />
+		<Unit filename="Common/VarUtils.hpp" />
+		<Unit filename="Common/pg_const.h" />
+		<Unit filename="GMPsgCtl/GMPsgCtl.IDL" />
+		<Unit filename="GMPsgCtl/GMPsgCtl.cpp" />
+		<Unit filename="GMPsgCtl/GMPsgCtl.def" />
+		<Unit filename="GMPsgCtl/GMPsgCtl.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="GMPsgCtl/GMPsgCtl.rgs" />
+		<Unit filename="GMPsgCtl/GMPsgCtl.rh" />
+		<Unit filename="GMPsgCtl/GMPsgCtlClsFactory.cpp" />
+		<Unit filename="GMPsgCtl/GMPsgCtlClsFactory.hpp" />
+		<Unit filename="GMPsgCtl/GMPsgCtlIntfc.cpp" />
+		<Unit filename="GMPsgCtl/GMPsgCtlIntfc.hpp" />
+		<Unit filename="GMPsgCtl/GMPsgCtlms.def" />
+		<Unit filename="MakeCSRes/MakeCSRes.cpp" />
+		<Unit filename="PostGISGDOInfo.txt" />
+		<Unit filename="PostGISGDOUserInfo.txt" />
+		<Unit filename="PostGISGDO/PGSCols.cpp" />
+		<Unit filename="PostGISGDO/PGSCols.hpp" />
+		<Unit filename="PostGISGDO/PGSGeom.cpp" />
+		<Unit filename="PostGISGDO/PGSGeom.hpp" />
+		<Unit filename="PostGISGDO/PGSIndex.cpp" />
+		<Unit filename="PostGISGDO/PGSIndex.hpp" />
+		<Unit filename="PostGISGDO/PGSRecordset.cpp" />
+		<Unit filename="PostGISGDO/PGSRecordset.hpp" />
+		<Unit filename="PostGISGDO/PGSTableDef.cpp" />
+		<Unit filename="PostGISGDO/PGSTableDef.hpp" />
+		<Unit filename="PostGISGDO/PostGIS.cpp" />
+		<Unit filename="PostGISGDO/PostGIS.def" />
+		<Unit filename="PostGISGDO/PostGIS.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="PostGISGDO/PostGIS.rgs" />
+		<Unit filename="PostGISGDO/PostGIS.rh" />
+		<Unit filename="PostGISGDO/PostGISClsFactory.cpp" />
+		<Unit filename="PostGISGDO/PostGISClsFactory.hpp" />
+		<Unit filename="PostGISGDO/PostGISGDO.cpp" />
+		<Unit filename="PostGISGDO/PostGISGDO.hpp" />
+		<Unit filename="PostGISGDO/PostGISms.def" />
+		<Unit filename="PostGISGDOfaqs.txt" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.IDL" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.cpp" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.def" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.rgs" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCOM.rh" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCls.cpp" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsCls.hpp" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsClsFactory.cpp" />
+		<Unit filename="PsgDBUtilsCOM/PsgDBUtilsClsFactory.hpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUDLLMain.cpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUDLLMain.hpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUTables.cpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUTables.hpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUtilsDLL.cpp" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUtilsDLL.def" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUtilsDLL.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="PsgDBUtilsDLL/PsgDBUtilsDLL.rh" />
+		<Unit filename="PsgDBUtilsDLL/PsgDBUtilsDLLms.def" />
+		<Unit filename="PsgDBUtils/PsgDBUConnDlg.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUConnDlg.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUFldEdtDlg.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUFldEdtDlg.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUFtrClsDlg.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUFtrClsDlg.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUMainDlg.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUMainDlg.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUSpecFldEdt.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUSpecFldEdt.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUUsrDlg.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUUsrDlg.hpp" />
+		<Unit filename="PsgDBUtils/PsgDBUtils.cpp" />
+		<Unit filename="PsgDBUtils/PsgDBUtils.exe.manifest.32" />
+		<Unit filename="PsgDBUtils/PsgDBUtils.exe.manifest.64" />
+		<Unit filename="PsgDBUtils/PsgDBUtils.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="PsgDBUtils/PsgDBUtils.rh" />
+		<Unit filename="libpq/libpq-fe.h" />
+		<Unit filename="makefile" />
+		<Unit filename="makefile.mingw64" />
+		<Unit filename="makefile.ms" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

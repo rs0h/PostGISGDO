@@ -1,0 +1,51 @@
+HKCR
+{
+	PostGIS.GDatabase = s 'PostGIS GDatabase Object'
+	{
+		CLSID = s '{13C71AD3-FA0B-44F8-90D2-347AA6187320}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {13C71AD3-FA0B-44F8-90D2-347AA6187320} = s 'PostGIS GDatabase Object'
+		{
+			ProgID = s 'PostGIS.GDatabase'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			VersionIndependentProgID = s 'PostGIS.GDatabase'
+			TypeLib = s '{11A6CDD0-78F6-11CF-83FC-080036830302}'
+		}
+	}
+}
+HKLM
+{
+	NoRemove SOFTWARE
+	{
+	    NoRemove GDO
+	    {
+            ForceRemove PostGIS
+            {
+                1.0
+                {
+                    DatabaseClass = s 'PostGIS.GDatabase'
+                    DefaultExtension = s ''
+                    LongName = s 'Intergraph PostGIS GDatabase Object'
+                    NameDescription = s 'PostGIS Database'
+                    NameIsDirectory = s '0'
+                    NameIsFile = s '0'
+                    NativeControls
+                    {
+                        val ConnectionPropertiesControlProgID = s 'GMPsgCtl.GMPostGISConnectionProps'
+                    }
+                    ReadWrite = s '1'
+                    ShortName = s 'PostGIS'
+                    SourceStringDescription = s 'PostGIS Connection String'
+                    SourceStringUsed = s '1'
+                    'Store Password' = s '1'
+                    SurrogateFor
+                }
+            }
+	    }
+	}
+}

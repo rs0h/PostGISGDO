@@ -1,0 +1,116 @@
+Q. Is PostgreSQL ODBC driver is needed?
+
+A. No.
+
+Q. Is there any limit for the number of vertices to be stored or retrieved for a single geometry object?
+
+A. No.
+
+Q. What geometry types can be used by PostGIS GDO?
+
+A. The types provided by GeoMedia and by PostGIS are two overlepped but not inclusive sets. Basically,
+GeoMedia can read all of the PostGIS types, however PostGIS cannot store all types used by GeoMedia. Namely,
+PostGIS does not know Oriented Point geometry, Text geometry and Raster Image geometry.
+
+Q. So the geometry types not recognized by PostGIS cannot be used with a PostGIS connection?
+
+A. Not quite so. Currently we don't support the oriented points. Each point is stored as simple point, and
+each point from the database is served as oriented point with angle 0. We suggest to use separate
+attribute field for the rotation and compose the oriented point in the geoworkspace using queries.
+
+The other two types - Text geometry and Raster Image geometry are implemented and stored as binary native
+Intergraph types. It basically brings a limitation that these geometry types cannot undergo spatial
+operations such as spatial filtering. Note that text geometry can also be alternatively stored as point
+geometry and text attribute field (and possibly orientation also) and recovered by queries.
+
+Q. Why an internal spatial filtering mechanism is not implemented for the geometry types unsupported by
+PostGIS?
+
+A. We believe that if people want to use PostGIS, they should be aware of its limitations and the decision,
+whether to use PostGIS or not is up to every user. There are two possible advantages of PostGIS:
+  1. - the interoperability, we mean lots of other either open or closed source projects using this database.
+So if exploiting this benefit, people should not mind that some geometry types are not natively available.
+  2. - the PostGIS spatial functions, namely the spatial filtering. Together with item 1, we would say that
+people should understand that only the PostGIS native geometry types can be spatially filtered. And if we
+provide some other geometry types, to be more compatible with GeoMedia standard, then it is our good will
+and again, people must understand that not all spatial functionality is available for this extension.
+Implementing our own spatial processing for PostGIS would go against the PostGIS philosophy and possibly
+degrade the server performance. Eventually, raster image data cannot undergo spatial operations in either
+GDO server. So people should be used to the fact that not all spatial types can be filtered.
+
+Q. PostGIS provides about 11 geometry types (two for point, five for lines and four for areas), each of them
+with four variants (2D, 3D, 2DM, 3DM). Geomedia only knows 3 geometry types corresponding to these types -
+point, linear and areal. How can GeoMedia coop with the large number of PostGIS types?
+
+A. GeoMedia knows more geometry types - for example point geometry, and geometry collection which corresponds
+to PostGIS' MULTIPOINT type. And so on. So GeoMedia can find equivalent for each geometry type provided by
+PostGIS. Another question is that GeoMedia only recognizes three types of geometry fields. But these fields
+can hold for example a single point or a collection. Or either linear polyline, or curved polyline.
+
+Q. So when working in the schema updatable mode, how tables with the various PostGIS geometry types can be
+created?
+
+A. GeoMedia can create PostGIS tables with three geometry types only - namely MULTIPOINT, MULTILINESTRING and
+MULTIPOLYGON. If somebody want to use other geometry types, the tables must be created via PostgreSQL
+tools (e.g. psql command line utility).
+
+Q. How GeoMedia deals with arcs?
+
+A. The above mentioned geometry types cannot store arcs. The reason why these types have been chosen, and not
+for example MULTICURVE or MULTISURFACE types is, that it looks like PostGIS has problems when these types
+undergo spatial operations. Moreover these types are so called EWKB (Extended Well Know Binary, designed by
+PostGIS developers) and are not part of the standard WKB. So it seems to be better to provide OGC compliant
+format by default.
+
+If a table created by PostGIS tools contains geometries with curves, the arcs can both be read and writen by
+GeoMedia.
+
+Q. What happens if somebody tries to store arcs into geometry not supporting curves?
+
+A. The arc will be silently stroked by PostGIS GDO.
+
+Q. Does spatial filtering work well?
+
+A. Spatial filtering seems to work well on suported geometry types. However, there seems to be problems when
+the filter geometry is somehow complex. For example the state of Alabama cannot be used as spatial filter,
+however, Colorado or Wyoming work fine. This is most likely a PostGIS bug. It is important that map window
+extent seems to work as the spatial filter well.
+
+Q. How GeoMedia coops with PostGIS spatial reference systems?
+
+A. This is quite a complicated question. PostGIS uses internally spatial reference systems (Srid) similar like
+Orace spatial does. When with Oracle this information is more or less ignored by GeoMedia, we cannot do that
+with PostGIS. The reason is that PostGIS strongly requires the Srid information to be stored in each single
+geometry object. A simple solution would be to ignore that and simple feed it with one arbitrary EPSG
+recognized by PostGIS. However, this would not be a good solution since it would disqualify users of the same
+database which use other tools to access spatial data.
+
+Therefore a mechanism has been implemented to uniquelly map GeoMedia csf files to PostGIS Srid codes. The
+information is stored for all known EPSG coordinate systems and is compiled into the PostGISGDO.dll resource.
+Should some other coordinate system be supported, the csf file with the name of the form "EPSG<EPSG code>.csf"
+should be provided to developers and the software recompiled.
+
+Q. What coordinate systems are currently supported?
+
+A. At the moment the following EPSG codes are supported:
+2056, 2065, 2193, 2393, 2494,
+3003, 3004, 3034, 3035, 3045, 3046, 3057, 3785,
+4230, 4258, 4267, 4269, 4326, 4818,
+7408,
+21781, 23029, 23030, 23031, 23700, 25829, 25830, 25831, 25832, 25833, 26716, 26916, 27700, 28403, 28404, 28992,
+31287, 31297, 31370, 31466, 31467, 31468, 32616, 32628, 32629, 32630, 32631, 32632, 32633, 32634, 34003, 34005,
+45001, 45556,
+102067,
+900913
+
+Q. Are there any special considerations regarding the database security?
+
+A. The database owner or administrator is fully responsible for the database security. GeoMedia needs read access
+on tables accessed by the current user plus read access on the two PostGIS metadata tables - spatial_ref_sys and
+geometry_columns. For read/write access, the read/write access is needed on the geometry tables and INGR
+metadata. For schema updatable access, the read/write access is required also on the two PostGIS metadata
+tables.
+
+Q. I have read/write warehouse with metadata and I am still getting error when trying to edit or insert a feature.
+
+A. Make sure that the underlying table has a primary key defined.

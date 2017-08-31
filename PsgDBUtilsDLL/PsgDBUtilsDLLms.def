@@ -1,0 +1,14 @@
+LIBRARY PsgDBUtils.dll
+EXPORTS
+DbuOpenConnection	@1
+DbuCloseConnection	@2
+DbuGetConnectionStatus @3
+DbuCreateMetadata  @4
+DbuDropMetadata    @5
+DbuGetTables   @6
+DbuUpdateAllTables @7
+DbuFillCtrlWithUserNames   @8
+DbuFillCtrlWithSrids    @9
+DbuGrantGdoPrivileges  @10
+DbuRunScript   @11
+DbuClearModificationLog @12

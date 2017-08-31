@@ -1,0 +1,188 @@
+// typelib filename: PsgDBUtilsCOM.tlb
+
+[
+  uuid(0132C3DB-DEC6-11E4-842E-0800272B53A1),
+  version(1.0),
+  helpstring("System Intergraph GeoMedia PostGIS DBUtils"),
+]
+library PsgDBUtilsCOM
+{
+    importlib("stdole2.tlb");
+
+    // Forward declare all types defined in this typelib
+    interface IDbuConnection;
+    interface IDbuField;
+    interface IDbuFields;
+    interface IDbuTable;
+    interface IDbuTables;
+
+    [
+      odl,
+      uuid(0132C3DE-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IDbuField : IDispatch {
+        [id(0x00000001), propget]
+        HRESULT Name([out, retval] BSTR *pbsName);
+        [id(0x00000002), propget]
+        HRESULT Visible([out, retval] bool *pbVisible);
+        [id(0x00000002), propput]
+        HRESULT Visible([in] bool bVisible);
+        [id(0x00000003), propget]
+        HRESULT Type([out, retval] int *piType);
+        [id(0x00000003), propput]
+        HRESULT Type([in] int iType);
+        [id(0x00000004), propget]
+        HRESULT SubType([out, retval] long *plSubType);
+        [id(0x00000004), propput]
+        HRESULT SubType([in] long lSubType);
+        [id(0x00000005), propget]
+        HRESULT Srid([out, retval] unsigned long *pulSrid);
+        [id(0x00000005), propput]
+        HRESULT Srid([in] unsigned long ulSrid);
+        [id(0x00000006), propget]
+        HRESULT IsKey([out, retval] bool *pbIsKey);
+        [id(0x00000006), propput]
+        HRESULT IsKey([in] bool bIsKey);
+        [id(0x00000007), propget]
+        HRESULT Description([out, retval] BSTR *pbsDesc);
+        [id(0x00000007), propput]
+        HRESULT Description([in] BSTR bsDesc);
+        [id(0x00000008), propget]
+        HRESULT HasSpecField([out, retval] bool *pbHasSpecFld);
+        [id(0x00000009), propget]
+        HRESULT IsHypertext([out, retval] bool *pbIsHypertext);
+        [id(0x00000009), propput]
+        HRESULT IsHypertext([in] bool bIsHypertext);
+    };
+
+    [
+      odl,
+      uuid(0132C3DF-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IDbuFields : IDispatch {
+        [id(0x00000001), propget]
+        HRESULT NextGeomName([in, out] int *piStart, [out, retval] BSTR *pbsNextGeomName);
+        [id(0x00000002), propget]
+        HRESULT Count([out, retval] int *piCount);
+        [id(0x00000003), propget]
+        HRESULT Item([in] int idx, [out, retval] IDbuField **ppItem);
+        [id(0x00000004)]
+        HRESULT FindByName([in] BSTR bsName, [out, retval] IDbuField **ppItem);
+    };
+
+    [
+      odl,
+      uuid(0132C3E0-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IDbuTable : IDispatch {
+        [id(0x00000001), propget]
+        HRESULT Name([out, retval] BSTR *pbsName);
+        [id(0x00000002), propget]
+        HRESULT Visible([out, retval] bool *pbVisible);
+        [id(0x00000002), propput]
+        HRESULT Visible([in] bool bVisible);
+        [id(0x00000003)]
+        HRESULT SaveTableMetadata();
+        [id(0x00000004), propget]
+        HRESULT PrimaryGeometry([out, retval] BSTR *pbsGeomName);
+        [id(0x00000004), propput]
+        HRESULT PrimaryGeometry([in] BSTR bsGeomName);
+        [id(0x00000005), propget]
+        HRESULT Description([out, retval] BSTR *pbsDesc);
+        [id(0x00000005), propput]
+        HRESULT Description([in] BSTR bsDesc);
+        [id(0x00000006), propget]
+        HRESULT Fields([out, retval] IDbuFields **ppFields);
+        [id(0x00000007), propget]
+        HRESULT IsView([out, retval] bool *pbIsView);
+        [id(0x00000008)]
+        HRESULT SetChanged([in] bool bChanged);
+        [id(0x00000009)]
+        HRESULT ChangeSpecField([in] IDbuField *pField, [out, retval] bool *pbChanged);
+    };
+
+    [
+      odl,
+      uuid(0132C3E1-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IDbuTables : IDispatch {
+        [id(0x00000001), propget]
+        HRESULT Count([out, retval] int *piCount);
+        [id(0x00000002), propget]
+        HRESULT Item([in] int idx, [out, retval] IDbuTable **ppTable);
+    };
+
+    typedef [helpstring("Connection Status Constants")]
+    enum ConnStatus {
+        icsClosed = 0,
+        icsNotEnoughPrivileges = 1,
+        icsNoPostGis = 2,
+        icsNoMetadata = 3,
+        icsStrangeMetadata = 4,
+        icsSimpleMetaIncomplete = 5,
+        icsSimpleMetadata = 6,
+        icsINGRMetaIncomplete = 7,
+        icsINGRMetadata = 8
+    } ConnStatus;
+
+    [
+      odl,
+      uuid(0132C3DD-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface IDbuConnection : IDispatch {
+        [id(0x00000001)]
+        HRESULT OpenConnection([in] BSTR bsServer, [in] BSTR bsDatabase,
+            [in] BSTR bsUser, [in] BSTR bsPasswd, [in, optional] VARIANT iPort);
+        [id(0x00000002)]
+        HRESULT CloseConnection();
+        [id(0x00000003), propget]
+        HRESULT ConnectionStatus([out, retval] ConnStatus *pConnStatus);
+        [id(0x00000004)]
+        HRESULT CreateMetadata([in] bool bFull);
+        [id(0x00000005)]
+        HRESULT DropMetadata();
+        [id(0x00000006), propget]
+        HRESULT Tables([out, retval] IDbuTables **ppTables);
+        [id(0x00000007)]
+        HRESULT UpdateAllTables([in] bool bVisible);
+        [id(0x00000008)]
+        HRESULT FillCtrlWithUserNames([in] long hWnd, [in] int iMsg);
+        [id(0x00000009)]
+        HRESULT FillCtrlWithSrids([in] long hWnd, [in] int iMsg);
+        [id(0x00000010)]
+        HRESULT GrantGdoPrivileges([in] int iMode, [in] BSTR bsUser);
+        [id(0x00000011)]
+        HRESULT RunScript([in] BSTR bsFileName);
+        [id(0x00000012)]
+        HRESULT ClearModificationLog();
+    };
+
+    [
+      uuid(0132C3DC-DEC6-11E4-842E-0800272B53A1),
+      version(1.0),
+    ]
+    coclass DbuConnection {
+        [default] interface IDbuConnection;
+    };
+};

@@ -1,0 +1,35 @@
+HKCR
+{
+	PsgDBUtils.Connection = s 'PsgDBUtils Connection Object'
+	{
+		CLSID = s '{0132C3DC-DEC6-11E4-842E-0800272B53A1}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {0132C3DC-DEC6-11E4-842E-0800272B53A1} = s 'PsgDBUtils Connection Object'
+		{
+			ProgID = s 'PsgDBUtils.Connection'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			VersionIndependentProgID = s 'PsgDBUtils.Connection'
+			TypeLib = s '{0132C3DB-DEC6-11E4-842E-0800272B53A1}'
+		}
+	}
+	NoRemove TypeLib
+	{
+	    ForceRemove {0132C3DB-DEC6-11E4-842E-0800272B53A1}
+	    {
+	        1.0 = s 'System Intergraph GeoMedia PostGIS DBUtils'
+	        {
+	            0
+	            {
+	                Win32 = s '%MODULE%'
+	            }
+	            FLAGS = s '0'
+	            HELPDIR = s 'C:\Program Files\GeoMedia Professional\Program\resdlls\0009'
+	        }
+	    }
+	}
+}

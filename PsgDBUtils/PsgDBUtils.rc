@@ -1,0 +1,272 @@
+// Copyright 2011 Intergraph Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma code_page(1252)
+
+#ifdef WIN64
+#include <winnt.rh>
+#include <winuser.rh>
+#else
+#include <winnt.h>
+#include <winuser.h>
+#endif
+#include <winver.h>
+#include <commctrl.h>
+#include "PsgDBUtils.rh"
+//#include "../Common/openctrls.h"
+
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#define RT_MANIFEST 24
+
+LANGUAGE LANG_NEUTRAL, 0
+
+#ifdef WIN64
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "PsgDBUtils/PsgDBUtils.exe.manifest.64"
+#else
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "PsgDBUtils/PsgDBUtils.exe.manifest.32"
+#endif
+
+MAINICON ICON "PsgDBUtils/DBUtils.ico"
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    IDS_DBCLOSED "No connection opened"
+    IDS_NOPRIVILEGES "The user connected has most likely limited provileges \
+to the database"
+    IDS_NOPOSTGIS "The database seems to be a plain PostgreSQL (no PostGIS metadata)"
+    IDS_NOMETADATA "The database contains no metadata"
+    IDS_STRANGEMETA "The database contains an invalid metadata"
+    IDS_SIMPLEMETAINCOMPL "The database contains sparse simple metadata"
+    IDS_SIMPLEMETA "The database contains valid simple metadata"
+    IDS_INGRMETAINCOMPL "The database contains sparse INGR metadata"
+    IDS_INGRMETA "The database contains valid INGR metadata"
+
+    ISD_ISKEY "Is key field"
+    ISD_ISPRIMARY "Is primary geometry"
+
+    IDS_BOOLEAN "Boolean"
+    IDS_BYTE "Byte"
+    IDS_INTEGER "Integer"
+    IDS_LONG "Long"
+    IDS_CURRENCY "Currency"
+    IDS_SINGLE "Single"
+    IDS_DOUBLE "Double"
+    IDS_DATE "Date"
+    IDS_TEXT "Text"
+    IDS_BINARY "Binary"
+    IDS_MEMO "Memo"
+    IDS_GUID "GUID"
+    IDS_SPATIAL "Spatial geometry"
+    IDS_GRAPHICS "Graphics"
+
+    IDS_LINE "Line"
+    IDS_AREA "Area"
+    IDS_ANYSPATIAL "Any spatial"
+    IDS_RASTER "Raster image"
+    IDS_GRAPHTEXT "Graphical Text"
+    IDS_POINT "Point"
+
+    IDS_SQLFILTER "SQL Script Files (*.sql)\1*.sql\1All files\1*.*\1\1"
+    IDS_USERPUBLIC "Public"
+    IDS_RIGHTNONE "Revoke GDO Access"
+    IDS_RIGHTREAD "Read"
+    IDS_RIGHTWRITE "Write"
+    IDS_RIGHTMODIFY "Modify"
+    IDS_RIGHTADMIN "Admin"
+
+    IDS_CREATEINGRFLD "Create INGR Field"
+    IDS_DROPINGRFLD "Drop INGR Field"
+    IDS_CREATENATIVEFLD "Create Native Field"
+    IDS_DROPNATIVEFLD "Drop Native Field"
+
+    IDS_ERRORBASE "Error"
+    IDE_DBU_IS_RUNNING "Another instance of DBUtils is running"
+    IDE_LOW_PRIVILEGES "The user connected has most likely limited provileges \
+to the database. Please grant all to that user or connect as the database owner."
+    IDE_NOSUITABLEDRIVE "No suitable PostgreSQL ODBC driver found"
+    IDE_CUSTSCRIPTFAIL "Custom script failed"
+    IDE_FAIL "Operation failed"
+
+    IDS_INFOBASE "Information"
+    IDI_MODLOGDELETED "Modification log has been cleared"
+    IDI_CUSTSCRIPTOK "Custom script executed OK"
+    IDI_USRGRANTED "User privileges granted"
+    IDI_DONE "Operation succesful"
+END
+
+MAINMENU MENU DISCARDABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    POPUP "&Database"
+    BEGIN
+        MENUITEM "&Open...\tCtrl+O", IDM_DBOPEN
+        //MENUITEM "&New...\tCtrl+N", IDM_DBNEW
+        MENUITEM "&Close", IDM_DBCLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4", IDM_FILEEXIT
+    END
+    POPUP "&Help", HELP
+    BEGIN
+        MENUITEM "&Content...", IDM_HELPCONT
+        MENUITEM "&About...", IDM_HELPABOUT
+    END
+END
+
+MAINACC ACCELERATORS
+BEGIN
+  "^O", IDM_DBOPEN
+  //"^N", IDM_DBNEW
+END
+
+MAINFORM DIALOG 0, 0, 285, 195
+CAPTION "PostGIS GDO Database Utilities"
+STYLE WS_CAPTION | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX | WS_POPUP | DS_CENTER
+EXSTYLE WS_EX_APPWINDOW
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+MENU MAINMENU
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX "Connection details", 0, 5, 5, 275, 50
+    LTEXT "Server: ", 0, 10, 18, 40, 10
+    LTEXT "", CTL_MND_SRVLAB, 55, 18, 105, 10
+    LTEXT "Database: ", 0, 10, 30, 40, 10
+    LTEXT "", CTL_MND_DBLAB, 55, 30, 105, 10
+    LTEXT "Name: ", 0, 10, 42, 40, 10
+    LTEXT "", CTL_MND_USRLAB, 55, 42, 105, 10
+    PUSHBUTTON "&New Connection ...", IDM_DBOPEN, 165, 18, 110, 15
+    GROUPBOX "Utilities", 0, 5, 60, 275, 90
+    PUSHBUTTON "Create &Simple Metadata Tables", CTL_MND_CSMT, 10, 70, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "Create &INGR Metadata Tables", CTL_MND_CIMT, 10, 90, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "&Drop Metadata Tables", CTL_MND_ACS, 10, 110, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "&Grant Metadata Privileges...", CTL_MND_GMDP, 10, 130, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "Clear &Modification Log...", CTL_MND_CML, 145, 70, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "&Edit Feature Class Metadata...", CTL_MND_EFCM, 145, 90, 130,
+        15, WS_DISABLED
+    PUSHBUTTON "&Run script...", CTL_MND_DFCM, 145, 110, 130, 15, WS_DISABLED
+    PUSHBUTTON "Edit Special &Table Columns...", CTL_MND_CMLT, 145, 130, 130,
+        15, WS_DISABLED
+    GROUPBOX "Connection Status", 0, 5, 155, 220, 35
+    LTEXT "No connection opened", CTL_MND_CONNSTATLAB, 10, 168, 210, 20
+    PUSHBUTTON "&Close", IDM_FILEEXIT, 230, 175, 50, 15
+END
+
+CONNDLG DIALOG 0, 0, 215, 105
+CAPTION "New Connection"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Server:", 0, 5, 7, 45, 10
+    EDITTEXT CTL_CON_SERVEREDT, 55, 5, 75, 12, ES_AUTOHSCROLL
+    LTEXT "Port:", 0, 145, 7, 20, 10
+    EDITTEXT CTL_CON_PORTEDT, 170, 5, 40, 12, ES_AUTOHSCROLL
+    LTEXT "Database:", 0, 5, 27, 45, 10
+    EDITTEXT CTL_CON_DBNAMEEDT, 55, 25, 100, 12, ES_AUTOHSCROLL
+    LTEXT "User:", 0, 5, 47, 45, 10
+    EDITTEXT CTL_CON_USERNAMEEDT, 55, 45, 100, 12, ES_AUTOHSCROLL
+    LTEXT "Password:", 0, 5, 67, 45, 10
+    EDITTEXT CTL_CON_USERPASSWDEDT, 55, 65, 100, 12, ES_AUTOHSCROLL | ES_PASSWORD
+    AUTOCHECKBOX "&Remember", CTL_CON_REMEMBER, 5, 85, 100, 10
+    PUSHBUTTON "&Cancel", IDCANCEL, 105, 85, 50, 15
+    DEFPUSHBUTTON "&OK", IDOK, 160, 85, 50, 15, WS_DISABLED
+END
+
+FTRCLASSESDLG DIALOG 0, 0, 225, 170
+CAPTION "Feature classes"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Available tables:", 0, 5, 5, 105, 10
+    CONTROL "", CTR_FCD_FTRLIST, WC_LISTVIEW, LVS_NOCOLUMNHEADER | WS_CHILD |
+        LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING,
+        5, 15, 105, 130, WS_EX_CLIENTEDGE
+    LTEXT "Primary geometry field:", 0, 115, 5, 105, 10
+    COMBOBOX CTR_FCD_PRIMGEOMCB, 115, 15, 105, 60, CBS_DROPDOWNLIST |
+        WS_VSCROLL | WS_DISABLED
+    LTEXT "Description:", 0, 115, 30, 105, 10
+    EDITTEXT CTR_FCD_FTRDESCEDT, 115, 40, 105, 85, WS_VSCROLL | ES_MULTILINE |
+        ES_WANTRETURN | WS_DISABLED
+    PUSHBUTTON "&Edit fields", CTR_FCD_EDTFLDSBTN, 115, 130, 50, 15, WS_DISABLED
+    PUSHBUTTON "&Select all", CTR_FCD_SELALLBTN, 5, 150, 50, 15
+    PUSHBUTTON "&Deselect all", CTR_FCD_SELNONEBTN, 60, 150, 50, 15
+    DEFPUSHBUTTON "&Cancel", IDCANCEL, 115, 150, 50, 15
+    PUSHBUTTON "&OK", IDOK, 170, 150, 50, 15, WS_DISABLED
+END
+
+FIELDSDLG DIALOG 0, 0, 225, 170
+CAPTION "Edit fields"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Available fields:", 0, 5, 5, 105, 10
+    CONTROL "", CTR_FLD_FLDLIST, WC_LISTVIEW, LVS_NOCOLUMNHEADER | WS_CHILD |
+        LVS_REPORT, 5, 15, 105, 130, WS_EX_CLIENTEDGE
+    LTEXT "Field type:", 0, 115, 5, 105, 10
+    COMBOBOX CTR_FLD_FLDTYPECB, 115, 15, 105, 60, CBS_DROPDOWNLIST |
+        WS_VSCROLL | WS_DISABLED
+    AUTOCHECKBOX "Is key field", CTR_FLD_KEYCHB, 115, 32, 105, 10, WS_DISABLED
+    LTEXT "Description:", 0, 115, 47, 105, 10
+    EDITTEXT CTR_FLD_FLDDESCEDT, 115, 57, 105, 35, WS_VSCROLL | ES_MULTILINE |
+        ES_WANTRETURN | WS_DISABLED
+    AUTOCHECKBOX "Is hypertext", CTR_FLD_HYPERCHB, 115, 95, 105, 10
+    LTEXT "Geometry type:", CTR_FLD_GEOMTYPELAB, 115, 95, 105, 10
+    COMBOBOX CTR_FLD_GEOMTYPECB, 115, 105, 105, 60, CBS_DROPDOWN | WS_VSCROLL |
+        WS_DISABLED
+    LTEXT "Coord syste SRID:", CTR_FLD_SRIDLAB, 115, 120, 105, 10
+    COMBOBOX CTR_FLD_SRIDCB, 115, 130, 105, 60, CBS_DROPDOWN | WS_VSCROLL |
+        WS_DISABLED
+    PUSHBUTTON "&Select all", CTR_FLD_SELALLBTN, 5, 150, 50, 15
+    PUSHBUTTON "&Deselect all", CTR_FLD_SELNONEBTN, 60, 150, 50, 15
+    DEFPUSHBUTTON "&OK", IDOK, 170, 150, 50, 15
+END
+
+USERSDLG DIALOG 0, 0, 225, 60
+CAPTION "Grant user rights"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "User:", 0, 5, 5, 105, 10
+    COMBOBOX CTR_URD_USERSCB, 5, 15, 105, 60, CBS_DROPDOWNLIST | WS_VSCROLL
+    LTEXT "Privileges:", 0, 115, 5, 105, 10
+    COMBOBOX CTR_URD_RIGHTSCB, 115, 15, 105, 60, CBS_DROPDOWNLIST | WS_VSCROLL
+    PUSHBUTTON "&Execute", CTR_URD_EXECBTN, 115, 40, 50, 15, WS_DISABLED
+    DEFPUSHBUTTON "&Close", IDCANCEL, 170, 40, 50, 15
+END
+
+SPECCOLLEDTDLG DIALOG 0, 0, 225, 150
+CAPTION "Feature classes"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Available tables:", 0, 5, 5, 105, 10
+    LISTBOX CTR_SCED_FTRLB, 5, 15, 105, 130, WS_VSCROLL | LBS_NOINTEGRALHEIGHT |
+        LBS_SORT
+    LTEXT "Geometry field:", 0, 115, 5, 105, 10
+    COMBOBOX CTR_SCED_GEOMCB, 115, 15, 105, 60, CBS_DROPDOWNLIST |
+        WS_VSCROLL | WS_DISABLED
+    LTEXT "Geometry type:", 0, 115, 35, 105, 10
+    LTEXT "", CTR_SCED_GEOMTYPELAB, 125, 50, 95, 10
+    PUSHBUTTON "managefields", CTR_SCED_MANAGEFLDBTN, 115, 65, 105, 15
+    DEFPUSHBUTTON "&Close", IDCANCEL, 170, 130, 50, 15
+END

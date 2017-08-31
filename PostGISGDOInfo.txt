@@ -1,0 +1,494 @@
+This document contains usefull information to install and run the
+GeoMedia PostGIS GDO data server.
+
+1. How to install PostGIS database server on Debian Linux
+=========================================================
+
+PoistGIS is a spatial extension on an OpenSource database PostgreSQL (called
+often Postgres for historical reason). Both Postgres and PostGIS can run on
+variety of platforms including MS Windows, Linux and Unix. The information
+how to install Postgres on a particular system can be found on the Postgres
+homepage http://www.postgresql.org/. Manual of how to install and work with
+Postgres is here: http://www.postgresql.org/docs/manuals/.
+
+Information of how to install PostGIS can be found on its homepage:
+http://postgis.refractions.net/, the manual can be downloaded here:
+http://postgis.refractions.net/documentation/.
+
+Although Postgres can be installod on almost any platform, the system has
+formerly been designed for Unix platforms, so it is somehow easier to install
+it on a Unix or a Linux platform. And since Debian is a Linux distribution for
+the most lazy people on the world (even lazier than Windows users are), we will
+show how to install PostgreSQL and PostGIS on Debian Linux.
+
+Download an appropriate installation iso image from Debian's home page:
+http://www.debian.org/distrib/netinst, either 32bit or 64bit and install
+the system. You can isntall it either as virtual system or on a real machine.
+
+When installing Debian Linux to be a database server, the graphic interface is
+not any important, so you don't need to install the X-Window system. If you
+do this, you will need a very basic knowledge of vi editor later to modify few
+configuration files. If you decide to install the graphic interface, you will
+be able to use the graphical editors to modify these files.
+
+Installin Debian Linux
+----------------------
+
+Note: if you didn't purchase a full Debian installation media, the machine
+where Debian is going to be installed has to have internet access. If you are
+behind a proxy, you will be prompted to specify the proxy name during the
+installation. You will be allowed to disconnect the intrnet connection as
+soon as you install the PostgreSQL server and PostGIS. We will discuss this
+later.
+
+Insert the installation media and power on the computer. On the first screen
+choose the first - Install - option. Then go through several choises until
+reaching the disk partition page. Here you can again enter defaults - so use
+the whole disk and guided partition method and then select defaults for the
+rest of the partition guide.
+
+Later you will be prompted for the root (super administrator account) password
+and then for a first user name. If this machine is particularly devoted to
+be a PostgreSQL database server, you can enter "postgres" as the name of this
+first user. This will save you some work.
+
+Finally, when you get to the "Software selection" page, uncheck "Desktop
+environment" (if you don't want the graphic interface) and only leave the
+"Standard system" selection. When the instalaltion finished, the computer gets
+rebooted. Then login as root. (If you install the graphic interface, you
+cannot log as root, so login as postgres or the user you created).
+
+Installing PoistgreSQL and PostGIS
+----------------------------------
+
+Now, you will see why using Debian is so easy. At the terminal type:
+
+apt-get install postgresql-8.3-postgis
+
+and that is.
+
+(If you have the graphic interface, you have to open the terminal window and
+type a little bit more:
+
+On *Ubuntu:
+
+sudo apt-get install postgresql-8.3-postgis
+
+and you will be prompted for the root password.
+
+On Debian: Start to root terminal, provide root password and type:
+
+apt-get install postgresql-8.3-postgis)
+
+
+Post -PostgreSQL- installation configuration
+--------------------------------------------
+
+At this time, if you want and can, you can disconnect your Debian
+machine from the internet and only leave it on the private network. It may
+also be convenient under some circumstances to set the static IP address for
+the database server machine. On a Debian machine, this can be done by
+editing the file /etc/network/interfaces and changing the attributes of the
+adapter corresponding to your network. If you have just one network card then
+the name of the adapter is eth0 and the default entry in the interfaces file
+looks like:
+
+iface eth0 inet dhcp
+
+which means dynamically assigned IP addres from the DHCP server. To get the
+static IP address, change this entry to:
+
+iface eth0 inet static
+    address <your_IP_address>
+    netmask 255.255.255.0
+
+and reboot the computer. The first three numbers of your IP adrress shoud
+match your DHCP server address and the last one should be outside of the
+range of your DHCP server.
+
+Starting to work with PostgreSQL and PostGIS
+--------------------------------------------
+
+So the PostgreSQL database and PostGIS extension got installed by the above
+single command. Logon as the postgres user and connect to the database server
+with "psql" command line utility.
+
+(Tip: You don't need to log the root user off. You can open a new console in
+Linux pressing Alt + Fn, and switch between consoles by the same key
+combination. The default console is at Alt + F1.)
+
+Create also a db user and grant administrator privileges to it. Also create
+password for this new user. The user can be created for example by the
+following psql command:
+
+create role gdouser login createdb password 'gdouser';
+
+Follow the instruction in the PostgreSQL manual to create your first database.
+It is better to use the psql tool and create the database on behalf of the
+newly created user:
+
+create database geotest owner gdouser;
+
+Note: The database name in Postgres is case sensitive. It looks like if you
+create the database using "createdb" utility, it will create the database
+with upercase letters as specified. However, if you create the database
+from psql using CREATE DATABASE sql command, it will convert the database
+name into lowercase. You can find the correct database name using
+
+select * from pg_database;
+(or "select datname from pg_database;")
+
+However, it is perhaps better to avoid capital letters in your database name
+at all.
+
+Configuring the database to be a PostGIS database
+-------------------------------------------------
+
+The description given in the PostGIS manual does not completely correspond to
+the situation when PostGIS has been installed on Debian from the official
+deb package. The installation scripts are stored in the directory
+
+/usr/share/postgresql-8.3-postgis
+
+and the postgis.sql file is named lwpostgis.sql.
+
+So while logged as postgres, change your current directory to the one above and
+then follow the instructions in the postgis manual, section 2.5, to create
+spatially enabled database.
+
+Finally you must grant privileges to your user on newly created tables:
+
+grant all on geometry_columns to gdouser;
+grant all on spatial_ref_sys to gdouser;
+
+(Note: for some reason the PostGIS installation scripts fails running from
+the database owner account. So we must run them from the superadmin - postgres
+- account and then grant the provileges on newly created tables.)
+
+Final configuration of the database server
+------------------------------------------
+
+Couple of more things has to be done in order to connect to the database
+server from a remote (Windows) machine. Login as root and change the directory
+to /etc/postgresql/8.3/main and edit the postgresql.conf file. In the
+"Connection settings" section add the following line
+
+listen_addresses = '*'
+
+and save the file.
+
+Then edit the file pg_hba.conf and add the following line at the end of the
+file:
+
+host   all   all   <your_server_ip_address>/24   md5
+
+and save the file. Now you need to refresh the information in the system. As
+almost everything in Linux, this is possible without the system reboot and
+you can find on Wikies how to do it. However, for the testing machine like
+the one we just configured the restart is the easiest way. So go to the root
+prompt and type:
+
+shutdown -r now
+
+
+2. Installing PostGIS GDO
+=========================
+
+Configuring the client machine
+------------------------------
+
+There are often problems with the communication between Windows and Linux
+machine, especially with DNS servers and name resolutions. If you are not
+expert on networking and don't want to waste your time, it is better if you
+have assigned the static IP address to your database server machine, and then
+just add the name and IP addres of your server machine to your Windows "hosts"
+file. The "hosts" file is located here (at least on Windows XP and older):
+
+C:\WINDOWS\system32\drivers\etc
+
+Installing the GDO server
+-------------------------
+If msi package is provided, just install it. Otherwise copy GMPsgCtl.ocx and
+PostGISGDO.dll to your hard disk and register them by the Regsvr32 utility.
+You can also use the provide Register.bat file to register the libraries.
+
+
+3. Working with PostGIS GDO
+===========================
+
+Postgis GDO server runs in three modes:
+  read only mode - this mode requires no metadata
+  read/write mode - this mode requires GAliasTable and modification logging
+  schema updatable mode - this mode requires full INGR metadata
+
+In order to simplify creation of metadata tables, Database Utilities are
+provided - this is a standalone utility with file name PsgDBUtils.exe.
+
+Working with Database Utilities
+-------------------------------
+Database Utilities provide simple interface to create or drop metadata tables
+and to edit/create/delete feature class metadata. When assigning the feature
+class metadata, list of available tables is diaplayed, except the two PostGIS
+metatables, GAliasTable, and all tables listed in GAliasTable. You can simply
+turn a feature class on or off by the check box in the list. Checked table is
+visible, unchecked is not visible. The same apply when editing particular
+fields.
+
+DB Utilities provide very little option for the field manipulation, as well as
+for the coordinate system assignment. The reason is that PostgreSQL knows
+perfectly what type is each particular field, and PostGIS knows perfectly
+what geometry type, and what coordinate system each geometry field is.
+
+The only exception are BLOB fields - "bytea" type in Postgres. This fields
+can be cast to a geometry field and can store either graphic text or raster
+images. Postgis does not provide storage for these two types, so the data
+can be stored as INGR geometry format, and cannot take part in spatial
+operations, including spatial filtering. The coordinate system must be
+specified in term of Srid = EPSG code.
+
+Working with PostGIS GDO
+------------------------
+You can view all geometries from the database with read only version. If you
+want read/write capabilities, simple metadata must be present. The geometries
+can consist of points, line segments and arc segments. However, not all PostGIS
+geometry types allow storing of arcs. In this case, if arc is attempted to
+be stored with the geometry, PostGIS GDO will automatically stroke it, without
+notification.
+
+If you work with full INGR metadata, you can also create, modify and drop
+tables. If you create new geometry tables, PostGIS GDO will createt the
+geometry columns as type MULTIPOINT, MULTILINE and MULTIPOLYGON for point,
+linear and area feature classes respectivelly. These types do not store
+arcs. If you need arcs to be stored, you can create the table manually via
+psql tool specifying the appropriate type - typically MUTLICURVE and
+MULTISUFACE. The reason why PostGIS GDO does not use these more generic types
+is that these types are not the WKT (WKB - well known text, well known binary)
+standard, and it looks like PostGIS cannot use (some?) spatial functions on
+these types.
+
+Note about spatial filter
+-------------------------
+PostGIS cannot spatially filter geometries containing arcs, as mentioned above.
+Problems can also be experienced when the filter geometry is somehow complex.
+However, simple geometries, like map window extent, work OK as a spatial filter.
+
+Note about coordinate systems
+-----------------------------
+PostGIS GDO does not create the GCoordSystem table, it synthetises this table
+in memory. The reason is that PostGIS must know of each geometry coordinate
+system. It uses the EPSG codes (Srid) and stores the coordinate system
+definitions internally. So PostGIS GDO gets this Srid information and does not
+create GCoordSystem table in order to avoid duplicity. However, in the schema
+updatable mode (INGR metadata), the GCoordSystem table is created. But PostGIS
+still must be able to match the coordinate system with Srid. Otherwise new
+geometries cannot be inserted.
+
+For portability reason, the Srid - GCoordSystem mapping is linked with the
+PostGIS GDO dll. It consists of about 40 coordinate systems known at the
+time of PostGIS GDO creation. If a new coordinate system should be added,
+the EPSG code must be known, the csf file with name EPSGxxxx.csf must be coppied
+into the source CoordSystems folder, the resource must be recreated using the
+MakeCSRes.exe utility (use the MakeCSRes.bat instead) and the PostGIS GDO
+project must be recompiled.
+
+
+4. Compilling PostGIS GDO
+=========================
+
+PostGIS GDO is written in C++ and makefile for MinGW is provided. PostGIS
+directly links libpq, the PostgreSQL front end library. If you want to compile
+PostGIS GDO by another compiler, you might need to update or re-create the
+makefile to suit to your particular compiler.
+
+Compilation tools
+-----------------
+The source code contains no special libraries, such us MFC ar ATL, so the
+project can virtualy be compilled by any Win32 target compatible compiler.
+
+Moreover, to compile the connection properties control, MIDL is required. MIDL
+comes with any version of MS Visual Studio. You may need to add some path to the
+environment variable to run MIDL sucessfully.
+
+Compilling with MinGW (GNU C++ compiler)
+----------------------------------------
+To compile the source code with MinGW, extract the content of the zip archive
+into any directory. Create a "Build" subdirectory of your root project directory
+and type "compile c" at command prompt. The "c" switch is used to build also
+the connection properties control, otherwise only the PostGISGDO and
+DBUtilities are compiled. Another defined switch is "a" (so "compile a") which
+deletes all intermediate files, thus rebuilding the whole project in fact.
+
+Post-compilation steps
+----------------------
+After you succesfully compile the project, you may need to register
+GMPsgCtl.ocx and PostGISGDO.dll by the Regsvr32 utility.
+
+Preprocessor switches, debugging
+--------------------------------
+There is one symbol definition which controls the PostGIS GDO behavior. The
+symbol is called DBGLEVEL. If DBGLEVEL is defined, the GDO server will create
+a file called PostGISGDO.log in the same directory where the binary
+PostGISGDO.dll file resides. Variety of inforamtion is logged in that file
+during the process execution. The log details depends on the DBGLEVEL numeric
+value, starting from 0 - the least comprehesive log and ending with 3 - the
+most comprehensive log. The log information can be very helpful when debugging
+various problems.
+
+Each start of GDO server will overwrite the previous log. If no DBGLEVEL symbol
+is defined, no log file is created.
+
+Note: If you change the DBGLEVEL, the whole project needs to be rebuild.
+
+Compilling the coordinate systems resource
+------------------------------------------
+Both the GDO server and DB Utilities link a binary file "csres.bin". This file
+is delivered with the project and it is located in the "Common" folder. See
+Appendix 2 for the purpose. This binary file can be recreated using the
+MakeCSRes.exe utility. To rebuilt the resource file, use the MakeCSRes.bat
+batch file. After you modified the csres.bin, the whole project must be rebuilt.
+
+Looking into future
+-------------------
+The code contains no or minimum platform specific symbols, so it should
+be very easy to recompile it for the 64bit platform.
+
+
+Apendix 1 - USSampleData coordinate system
+==========================================
+
+The EPSG code corresponding to Albers Equal Area with WGS 84 is most likely
+45556. In order to work with this projection you must load the appropriate
+row into spatial_ref_sys table. The SQL INSERT string is attached in the
+USSampleProjCS.sql file. You can load it from the command prompt by:
+
+psql -U gdouser -d ussampledata -f USSampleProjCS.sql
+
+Appendix 2 - Coordinate systems details
+=======================================
+PostGIS uses its own coordinate system information. Each coordinate system is
+identified by Srid, which should actually be the EPSG code. The information
+about (for PostGIS) knwon coordinate systems is stored in the "spatial_ref_sys"
+metatable.
+
+This is pretty similar to what Oracle does, however we cannot ignore the Srid
+information similarly as Oracle GDO does! The reason is that PostGIS stores
+Srid value in each geometry, and refuses to store new geometries, if correct
+Srid is not provided. Therefore we need some mechanism to coop with that.
+
+PostGIS internally uses the Proj4 open source project. The inforation contained
+in a proj4 coordinate system definition cannot be 1-1 mapped to the information
+stored by INGR coordinate system definition. So the resolution we provide here
+is to collect all known coordinate systems in csf format, which can be uniquelly
+matched with EPSG codes. The list is delivered with the source code and can be
+arbitrary extended.
+
+The coordinate systems are compiled into a binary file called "csres.bin" and
+linked with the project executables. A question why not to read directly the
+csf files from a defined location during the code execution might arrise. We
+believe there at least two good reasons not to do that:
+1. Protability: for delivering the GDO binaries, to link the csf files is more
+convenient way
+2. Dependency: the PostGIS GDO module would have to load the PCleint module and
+other dependecies (to access the CoordSystem object), which is probably not a
+good idea for such a low level module like a GDO server is.
+
+There are variety of places where PostGIS GDO must lookup for the coordinate
+system, in both direction: csf from Srid and vice versa. The most tricky part
+is to find Srid from GCoordSystem table row. We use the matching criteria
+base on the GCoordSystem table renerece available in GDO.pdf document. The
+only exception is the VerticalDatum - we ignore this value at the moment. The
+main reason for this is the confusion with USSampleData 6.1 version, where
+all geometries are stored with "user defined" vertical datum, except
+USSampleImage table, which uses EGM96 vertical datum! We are actually not sure
+at the moment, whether EPSG codes (as well as Proj4 Srid) take vertical
+datums into consideration or not.
+
+Appendix 3 - Geometry construction and handling
+===============================================
+PostGIS internally stores metainformation about geometry column in the
+"geometry_columns" metatable. We somehow abuse this table for our custom
+information, as will be explained later.
+
+Native geometry format
+----------------------
+PostGIS stores geometries in the WKB (Well Known Binary) format, and provides
+variety of functions to convert them to and from WKT (Well Known Text) format.
+We don't use the latter one at all.
+
+However, the true storage format in PostGIS is called EWKB (Extended Well
+Known Binary). The extension affects the standard (WKB, WKT) format in two
+ways: first it stores the Srid information, and second, it can also store
+arc segments.
+
+PostGIS defines several geometry subtypes. We can both read and write all
+of them. However, if geometry tables are created via GDO, we only support
+three PostGIS geometry types: MULTIPOINT, MULTILINE and MULTIPOLYGON. These
+types cannot store arcs, however, if GeoMedia user attempts to store arcs
+in such a geometry field, PostGIS GDO server will silently stroke them.
+
+Text and raster image formats
+-----------------------------
+PostGIS does provide neither graphics text nor raster image types. So we
+define such fields as binary fields ("bytea" type in PostgreSQL) and write
+our own information into geometry_columns table with our "user defined"
+types "GRAPHICTEXT" and "IMAGE". We hope that this little hack will not
+interfere with PostGIS, at least so far perfomed test does not indicate any
+conflicts.
+
+The text and raster geometries are stored normally as INGR binary format and
+cannot take part in server side spatial operations such as spatial filtering.
+
+Point geometries
+----------------
+All point geometries are served as oriented point geometry with orientation
+angle 0. PostGIS does not provide oriented point geometry. If this is an
+requirment in the future, the oriented point geometries can be stored by
+the same machanism as graphics text and images, however they couldn't be
+spatially filtered then.
+
+Geometry dimensions
+-------------------
+PostGIS can store the geometries as 2D, 3D, 4D and with some linear referencing.
+We can basically read and store all of them, however, when geometry tables
+are created wia GDO, we defines the geometry fields as 3D without linear
+referencing.
+
+
+Appendix 4 - Schemas
+====================
+PostGIS GDO support PostgreSQL schemas. When reading the list of available
+tables, PostGIS GDO reads tables from all schemas except pg_catalog and
+information_schema. Tables from public schema are displayed only with their
+names, tables from other schema are prefixed with the schema name, so the
+table name is of the form: <schema_name>.<table_name>. This somehow follows
+the internal PostgreSQL convention. Moreover, with this setup, beginners
+do not note the existence of the schemas at all, while advanced users may
+employ them.
+
+If you create a table from GeoMedia, you can simply put it into an existing
+schema specifying the full name as in the previous paragraph. Also when
+importing data using "Output to Feature Classes ..." command, the new table
+names are suggested without prefix. However, you can put a prefix manually
+to each table to be newly created.
+
+Metadata schemas
+----------------
+When creating metadata using PostGIS GDO Database Utilities, new schema "gdo"
+is attemted to be created and all metadata tables are put into this schema.
+However, if the user creates GDO metadata tables manually in another schema,
+PostGIS GDO will find them and will use it.
+
+
+Appendix 5 - GAliasTable
+========================
+The GAliasTable is presented "in memory" for the read-only server, must be
+physically created for read/write and schema updatable versions.
+
+Hiding metatables
+-----------------
+As explained in the previous part, PostgreSQL metadata are filtered by omiting
+the default schema they are placed in. However, the two PostGIS metatables 
+(spatial_ref_sys, geometry_columns and geography_columns view) are created
+in the "public" schema by default. So PostGIS GDO curently hides them, so they
+are not included in the GTableDefs colection at all. Another possibility would
+be to list them in the GAliasTable.

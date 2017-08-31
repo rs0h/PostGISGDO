@@ -1,0 +1,54 @@
+// Copyright 2011 Intergraph Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma code_page(1252)
+
+#include <winnt.h>
+#include <winuser.h>
+#include "GMPsgCtl.rh"
+
+LANGUAGE LANG_NEUTRAL, 0
+
+REG_MAIN RT_REGISTRY "GMPsgCtl.rgs"
+TLB_GMPsgCtl RT_TYPELIB "GMPsgCtl.tlb"
+1 BITMAP "TlbImg.bmp"
+
+PSGCTLPAGE DIALOG 0, 0, 210, 74
+CAPTION ""
+STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "&Server:", 0, 0, 2, 45, 10
+    EDITTEXT CTL_SERVEREDT, 50, 0, 75, 12, ES_AUTOHSCROLL
+    LTEXT "&Port:", 0, 140, 2, 20, 10
+    EDITTEXT CTL_PORTEDT, 165, 0, 43, 12, ES_AUTOHSCROLL
+    LTEXT "Data&base:", 0, 0, 22, 45, 10
+    EDITTEXT CTL_DBNAMEEDT, 50, 20, 158, 12, ES_AUTOHSCROLL
+    LTEXT "&User:", 0, 0, 42, 45, 10
+    EDITTEXT CTL_USERNAMEEDT, 50, 40, 158, 12, ES_AUTOHSCROLL
+    LTEXT "Pass&word:", 0, 0, 62, 45, 10
+    EDITTEXT CTL_USERPASSWDEDT, 50, 60, 158, 12, ES_AUTOHSCROLL | ES_PASSWORD
+END
+
+ABOUTBOX DIALOG 0, 0, 100, 60
+CAPTION "About"
+STYLE DS_3DLOOK | DS_CENTER
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "GeoMedia PostGIS Connection Properties Control", 0, 5, 5, 90, 30
+    DEFPUSHBUTTON "OK", IDOK ,25, 40, 50, 15
+END

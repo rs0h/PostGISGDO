@@ -1,0 +1,166 @@
+// Generated .IDL file (by the OLE/COM Object Viewer)
+//
+// typelib filename: GMPsgCtl.tlb
+
+[
+  uuid(64FF2B64-9C02-11DF-957E-00505610F7A2),
+  version(6.1),
+  helpstring("System Intergraph GeoMedia PostGIS GDO Controls 6.1"),
+  //helpfile("PsgCTL61.chm"),
+  //helpcontext(00000000)
+]
+library GMPsgCtl
+{
+    // TLib :     // TLib : Intergraph GeoMedia Coordinate Systems 6.1 : {7D377100-8137-11D0-91C4-08003601E0C4}
+    // importlib("PCSS.tlb");
+    // TLib : System Intergraph GeoMedia Command Support 6.1 : {AF97E968-65E2-11D1-A004-0800368EFF02}
+    // importlib("PCmdSupt.DLL");
+    // TLib : OLE Automation : {00020430-0000-0000-C000-000000000046}
+    importlib("stdole2.tlb");
+    // TLib : Intergraph GeoMedia Database Pipes 6.1 : {991E19B0-2E9C-11D1-975D-006097383113}
+    // importlib("PDBPipe.tlb");
+    // TLib : Intergraph GeoMedia Client Support 6.1 : {40068A10-67F4-11D0-8384-08003601E5F9}
+    // importlib("PClient.tlb");
+
+    // Forward declare all types defined in this typelib
+    // interface _GMPostGISNativeQueryProps;
+    interface _GMPostGISConnectionProps;
+    // dispinterface __GMPostGISNativeQueryProps;
+    dispinterface __GMPostGISConnectionProps;
+
+    /*[
+      odl,
+      uuid(64FF2B67-9C02-11DF-957E-00505610F7A2),
+      version(1.0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface _GMPostGISNativeQueryProps : IDispatch {
+        [id(0x60030005)]
+        HRESULT AddToCallbackList([in] _IChangePropertiesCallback* Cmd);
+        [id(0x60030006)]
+        HRESULT RemoveFromCallbackList([in] _IChangePropertiesCallback* Cmd);
+        [id(0x68030004), propputref]
+        HRESULT OutputRecordset([in, out] GRecordset** );
+        [id(0x68030004), propget]
+        HRESULT OutputRecordset([out, retval] GRecordset** );
+        [id(0x68030003), propputref]
+        HRESULT InputConnection([in, out] DGMConnection** );
+        [id(0x68030003), propget]
+        HRESULT InputConnection([out, retval] DGMConnection** );
+        [id(0x68030002), propget]
+        HRESULT CoordSystemsMgr([out, retval] DGMCoordSystemsMgr** );
+        [id(0x68030002), propputref]
+        HRESULT CoordSystemsMgr([in, out] DGMCoordSystemsMgr** );
+        [id(0x68030001), propget]
+        HRESULT TemporaryRecordset([out, retval] GRecordset** );
+        [id(0x68030000), propget]
+        HRESULT hWnd([out, retval] long* );
+        [id(0x60030007)]
+        HRESULT StoreDefaults(
+                        [in, out] BSTR* prefix,
+                        [in, out] IDispatch** PrefSet);
+        [id(0x60030008)]
+        HRESULT RestoreDefaults(
+                        [in, out] BSTR* prefix,
+                        [in, out] IDispatch** PrefSet);
+        [id(0xfffffdd8)]
+        HRESULT ShowAboutBox();
+    };
+
+    [
+      uuid(4A7804EE-49D8-4354-8090-4889EADB86DE),
+      version(1.0),
+      noncreatable,
+      hidden,
+      control
+    ]
+    coclass GMPostGISNativeQueryProps {
+        [default] interface _GMPostGISNativeQueryProps;
+        [default, source] dispinterface __GMPostGISNativeQueryProps;
+    };*/
+
+    [
+      odl,
+      uuid(64FF2B65-9C02-11DF-957E-00505610F7A2),
+      version(1.0),
+      hidden,
+      dual,
+      nonextensible,
+      oleautomation
+    ]
+    interface _GMPostGISConnectionProps : IDispatch {
+        [id(0x60030004)]
+        HRESULT StoreDefaults(
+                        [in, out] BSTR* prefix,
+                        [in, out] IDispatch** PrefSet);
+        [id(0x60030005)]
+        HRESULT RestoreDefaults(
+                        [in, out] BSTR* prefix,
+                        [in, out] IDispatch** PrefSet);
+        [id(0x68030003), propget]
+        HRESULT Location([out, retval] BSTR* );
+        [id(0x68030003), propput]
+        HRESULT Location([in, out] BSTR* );
+        [id(0x68030002), propget]
+        HRESULT ConnectInfo([out, retval] BSTR* );
+        [id(0x68030002), propput]
+        HRESULT ConnectInfo([in, out] BSTR* );
+        [id(0x68030001), propget]
+        HRESULT AuxiliaryPath([out, retval] BSTR* );
+        [id(0x68030001), propput]
+        HRESULT AuxiliaryPath([in, out] BSTR* );
+        [id(0x68030000), propget]
+        HRESULT ConnectionType([out, retval] BSTR* );
+        [id(0x68030000), propput]
+        HRESULT ConnectionType([in, out] BSTR* );
+        [id(0xfffffdfe), propget]
+        HRESULT Enabled([out, retval] VARIANT_BOOL* );
+        [id(0xfffffdfe), propput]
+        HRESULT Enabled([in, out] VARIANT_BOOL* );
+        [id(0xfffffdfd), propget]
+        HRESULT hWnd([out, retval] long* );
+        [id(0xfffffdd8)]
+        HRESULT ShowAboutBox();
+        [id(0x6003000b)]
+        HRESULT ValidateUserData([in, out] VARIANT_BOOL* bIsValid);
+    };
+
+    [
+      uuid(4A7804EE-49D8-4354-8090-4889EADB86DF),
+      version(6.1),
+      //noncreatable,
+      //hidden,
+      control
+    ]
+    coclass GMPostGISConnectionProps {
+        [default] interface _GMPostGISConnectionProps;
+        [default, source] dispinterface __GMPostGISConnectionProps;
+    };
+
+    /*[
+      uuid(64FF2B68-9C02-11DF-957E-00505610F7A2),
+      version(1.0),
+      hidden,
+      nonextensible
+    ]
+    dispinterface __GMPostGISNativeQueryProps {
+        properties:
+        methods:
+            [id(0x00000001)]
+            void Change();
+    };*/
+
+    [
+      uuid(64FF2B66-9C02-11DF-957E-00505610F7A2),
+      version(1.0),
+      hidden,
+      nonextensible
+    ]
+    dispinterface __GMPostGISConnectionProps {
+        properties:
+        methods:
+    };
+};

@@ -1,0 +1,45 @@
+// Copyright 2011 Intergraph Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma code_page(1252)
+
+#ifdef WIN64
+#include <winnt.rh>
+#include <winuser.rh>
+#else
+#include <winnt.h>
+#include <winuser.h>
+#endif
+#include <winver.h>
+#include <commctrl.h>
+#include "PsgDBUtilsDLL.rh"
+
+LANGUAGE LANG_NEUTRAL, 0
+
+COORDSYSTEMS CSTABLE "Common/csres.bin"
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+    IDS_DBCLOSED "No connection opened"
+    IDS_NOPRIVILEGES "The user connected has most likely limited privileges \
+to the database"
+    IDS_NOPOSTGIS "The database seems to be a plain PostgreSQL (no PostGIS metadata)"
+    IDS_NOMETADATA "The database contains no metadata"
+    IDS_STRANGEMETA "The database contains an invalid metadata"
+    IDS_SIMPLEMETAINCOMPL "The database contains sparse simple metadata"
+    IDS_SIMPLEMETA "The database contains valid simple metadata"
+    IDS_INGRMETAINCOMPL "The database contains sparse INGR metadata"
+    IDS_INGRMETA "The database contains valid INGR metadata"
+END

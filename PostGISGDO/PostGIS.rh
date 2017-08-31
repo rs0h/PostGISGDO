@@ -1,0 +1,39 @@
+// Copyright 2011 Intergraph Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#define RT_REGISTRY REGISTRY
+#define REG_MAIN 101
+
+#define RT_TYPELIB TYPELIB
+#define TLB_GDO 101
+#define TLB_ExtendedPS 102
+#define TLB_LiteralConversionExtension 103
+#define TLB_PAFM 104
+
+#define IDE_GDOERROR 101
+#define IDE_INVALIDCONNPARAMS 102
+#define IDE_INSUFFPRIVILEGES 103
+#define IDE_NOTPOSTGIS 104
+#define IDE_FLDMODONIDX 105
+#define IDE_GEOMCOLCHANGE 106
+#define IDE_NOTINDEXFLDPROP 107
+#define IDE_GEOMPROPONLY 108
+#define IDE_NOTGEOMLDPROP 109
+#define IDE_INDEXCREATED 110
+#define IDE_CANNOTADDPRIMARYKEY 111
+#define IDE_CANNOTDELPRIMARYKEY 112
+#define IDE_RASTERNOTSUPPORTED 113
+#define IDE_TEXTNOTSUPPORTED 114
+#define IDE_INVALIDGEOMETRYTYPE 115
+#define IDE_UNKNOWNCS 116
